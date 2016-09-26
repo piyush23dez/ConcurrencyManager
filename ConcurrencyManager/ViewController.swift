@@ -2,17 +2,36 @@
 //  ViewController.swift
 //  ConcurrencyManager
 //
-//  Created by Sharma, Piyush on 9/26/16.
+//  Created by Sharma, Piyush on 9/4/16.
 //  Copyright © 2016 Sharma, Piyush. All rights reserved.
 //
 
 import UIKit
 
+let imageURLs = ["http://www.planetware.com/photos-large/F/france-paris-eiffel-tower.jpg", "http://adriatic-lines.com/wp-content/uploads/2015/04/canal-of-Venice.jpg", "http://algoos.com/wp-content/uploads/2015/08/ireland-02.jpg", "http://bdo.se/wp-content/uploads/2014/01/Stockholm1.jpg"]
+
+class Downloader {
+    
+    class func downloadImgageWithURL(url: String) -> UIImage? {
+        
+        do {
+            let data = try Data(contentsOf: URL(string: url)!)
+            return UIImage(data: data)
+        }
+        catch let error {
+            print(error)
+        }
+        return nil
+    }
+}
+
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+      let time = self.getTimeIntervalFor(method: performCustomOperation)
+      print("time taken for running method: \(time)")
     }
 
     override func didReceiveMemoryWarning() {
@@ -20,6 +39,148 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    func downloadImages() {
+        
+        let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
+        let image2 = Downloader.downloadImgageWithURL(url: imageURLs[1])
+        let image3 = Downloader.downloadImgageWithURL(url: imageURLs[2])
+        let image4 = Downloader.downloadImgageWithURL(url: imageURLs[3])
+        print(image1, image2, image3, image4)
+    }
+    
+    //DispatchQueue for downloading images
+    func getImagesUsingDisptachQueue() {
+        
+        //Dispatch queues
+        
+        //System provided global 'concurrent disptach queue'
+        let concurrentQueue = DispatchQueue.global(qos: .background)
 
+        //User created 'concurrent dispatch queue'
+        //let customConcurrentQueue = DispatchQueue(label: "com.apple.concurrent", qos: .default, attributes: .concurrent)
+        
+        //User created serial dispatch queue
+        //let serialQueue = DispatchQueue(label: "com.apple.serial")
+        
+        
+        //Perform server operations on background thread
+        concurrentQueue.async {
+            for image in imageURLs {
+                let image = Downloader.downloadImgageWithURL(url: image)
+                print(image)
+            }
+            
+            //Perform UI updates on main thread
+            DispatchQueue.main.async {
+                //Update UI
+            }
+        }
+    }
+    
+    //OperationQueue for downloading images
+    func getImagesUsingOperationQueue() {
+    
+        let operationQueue = OperationQueue()
+        
+        for image in imageURLs {
+            
+            //Perform server operations on background thread
+            operationQueue.addOperation {
+                let image = Downloader.downloadImgageWithURL(url: image)
+                print(image)
+                
+                //Perform UI updates on main thread
+                OperationQueue.main.addOperation {
+                    //Update UI
+                }
+            }
+        }
+    }
+    
+    //BlockOperation for downloading images with dependancy
+    func getImagesUsingBlockOperation() {
+        let queue = OperationQueue()
+        var operations = [Operation]()
+        
+        let operation1 = BlockOperation {
+            let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
+            
+            OperationQueue.main.addOperation {
+                //Update UI
+                print(image1)
+                print("Operation1 completed")
+            }
+        }
+        
+        let operation2 = BlockOperation {
+            let image2 = Downloader.downloadImgageWithURL(url: imageURLs[1])
+            
+            //Perform UI updates on main thread
+            OperationQueue.main.addOperation {
+                //Update UI
+                print(image2)
+                print("Operation2 completed")
+            }
+        }
+        
+        //Execute operation1 after operation2 is finished
+        operation1.addDependency(operation2)
+        
+        operations.append(operation1)
+        operations.append(operation2)
+        queue.addOperations(operations, waitUntilFinished: true)
+    }
+    
+    //BlockOperations with priority
+    func performOperationsWithPriorities() {
+        let queue = OperationQueue()
+        
+        let operation1 = BlockOperation {}
+        let operation2 = BlockOperation {}
+        
+        operation1.completionBlock = {
+            print("Operation1 completed")
+        }
+        
+        operation2.completionBlock = {
+            print("Operation2 completed")
+        }
+        
+        operation1.queuePriority = .low
+        operation2.queuePriority = .high
+        
+        queue.maxConcurrentOperationCount = 1
+        queue.addOperations([operation1, operation2], waitUntilFinished: true)
+    }
+    
+    //Custom Operation Class
+    func performCustomOperation() {
+        let queue = OperationQueue()
+        
+        let customOperation1 = SwiftOperation()
+        customOperation1.completionBlock = {
+            print("Custom operation 1 is completed")
+        }
+        
+        let customOperation2 = SwiftOperation()
+        customOperation2.completionBlock = {
+            print("Custom operation 2 is completed")
+        }
+        
+        queue.maxConcurrentOperationCount = 1
+        queue.addOperation(customOperation1)
+        queue.addOperation(customOperation2)
+
+    }
+    
+    //Returns time interval for operation
+    func getTimeIntervalFor(method performBlock: (() -> Void)) -> TimeInterval {
+        let start = Date()
+        performBlock()
+        let end = Date()
+        
+        let timeInterval = end.timeIntervalSince(start)
+        return timeInterval
+    }
 }
 
