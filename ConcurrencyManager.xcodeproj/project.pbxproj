@@ -14,6 +14,7 @@
 		A63848291D9990D6008BBAA8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A63848271D9990D6008BBAA8 /* LaunchScreen.storyboard */; };
 		A63848331D99911B008BBAA8 /* ConcurrentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63848311D99911B008BBAA8 /* ConcurrentOperation.swift */; };
 		A63848341D99911B008BBAA8 /* SwiftOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63848321D99911B008BBAA8 /* SwiftOperation.swift */; };
+		A63848361D999C8F008BBAA8 /* Operation Process.png in Resources */ = {isa = PBXBuildFile; fileRef = A63848351D999C8F008BBAA8 /* Operation Process.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		A638482A1D9990D6008BBAA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A63848311D99911B008BBAA8 /* ConcurrentOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcurrentOperation.swift; sourceTree = "<group>"; };
 		A63848321D99911B008BBAA8 /* SwiftOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftOperation.swift; sourceTree = "<group>"; };
+		A63848351D999C8F008BBAA8 /* Operation Process.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Operation Process.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,13 +60,10 @@
 		A638481D1D9990D6008BBAA8 /* ConcurrencyManager */ = {
 			isa = PBXGroup;
 			children = (
-				A63848301D99911B008BBAA8 /* ConcurrentOperation */,
-				A638481E1D9990D6008BBAA8 /* AppDelegate.swift */,
 				A63848201D9990D6008BBAA8 /* ViewController.swift */,
-				A63848221D9990D6008BBAA8 /* Main.storyboard */,
-				A63848251D9990D6008BBAA8 /* Assets.xcassets */,
-				A63848271D9990D6008BBAA8 /* LaunchScreen.storyboard */,
-				A638482A1D9990D6008BBAA8 /* Info.plist */,
+				A63848351D999C8F008BBAA8 /* Operation Process.png */,
+				A63848301D99911B008BBAA8 /* ConcurrentOperation */,
+				A63848371D999C9B008BBAA8 /* Supporting Files */,
 			);
 			path = ConcurrencyManager;
 			sourceTree = "<group>";
@@ -76,6 +75,18 @@
 				A63848321D99911B008BBAA8 /* SwiftOperation.swift */,
 			);
 			path = ConcurrentOperation;
+			sourceTree = "<group>";
+		};
+		A63848371D999C9B008BBAA8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A638481E1D9990D6008BBAA8 /* AppDelegate.swift */,
+				A63848221D9990D6008BBAA8 /* Main.storyboard */,
+				A63848251D9990D6008BBAA8 /* Assets.xcassets */,
+				A63848271D9990D6008BBAA8 /* LaunchScreen.storyboard */,
+				A638482A1D9990D6008BBAA8 /* Info.plist */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,6 +148,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A63848361D999C8F008BBAA8 /* Operation Process.png in Resources */,
 				A63848291D9990D6008BBAA8 /* LaunchScreen.storyboard in Resources */,
 				A63848261D9990D6008BBAA8 /* Assets.xcassets in Resources */,
 				A63848241D9990D6008BBAA8 /* Main.storyboard in Resources */,
