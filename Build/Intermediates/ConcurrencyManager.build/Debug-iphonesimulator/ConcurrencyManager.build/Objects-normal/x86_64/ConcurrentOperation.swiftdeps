@@ -9,19 +9,19 @@ provides-member:
 - ["C18ConcurrencyManager19ConcurrentOperation", ""]
 - ["OC18ConcurrencyManager19ConcurrentOperation5State", ""]
 provides-dynamic-lookup:
-- "isExecuting"
-- "isAsynchronous"
 - "isFinished"
 - "isReady"
+- "isAsynchronous"
+- "isExecuting"
 depends-top-level:
-- !private "StringLiteralType"
-- "String"
-- "Operation"
-- !private "BooleanLiteralType"
-- !private "&&"
 - "Bool"
 - "ConcurrentOperation"
 - "=="
+- !private "StringLiteralType"
+- !private "&&"
+- "String"
+- "Operation"
+- !private "BooleanLiteralType"
 depends-member:
 - !private ["Ps9AnyObject", "didChangeValue"]
 - !private ["Ps9AnyObject", "init"]

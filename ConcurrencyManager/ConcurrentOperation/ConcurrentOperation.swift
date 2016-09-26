@@ -34,12 +34,12 @@ class ConcurrentOperation: Operation {
     var state: State = .isReady {
         
         willSet {
-            willChangeValue(forKey: newValue.keyPath())
-           // willChangeValue(forKey: state.keyPath())
+            willChangeValue(forKey: newValue.keyPath()) //new value
+            willChangeValue(forKey: state.keyPath())    //current value
         }
         didSet {
-            didChangeValue(forKey: oldValue.keyPath())
-            //didChangeValue(forKey: state.keyPath())
+            didChangeValue(forKey: oldValue.keyPath()) //old value
+            didChangeValue(forKey: state.keyPath())    //current value
         }
     }
     
