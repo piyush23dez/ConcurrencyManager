@@ -22,6 +22,7 @@ class SwiftOperation: ConcurrentOperation {
     }
     
     override func main() {
+        
         if self.isCancelled {
             state = .isFinished
         }
@@ -34,12 +35,26 @@ class SwiftOperation: ConcurrentOperation {
                 sleep(1)
             }
             
+            //After network operation or completion of long running task update state
             if self.isCancelled {
                 state = .isFinished
+                print("Task Cancelled")
             }
             else {
                 state = .isFinished
+                print("Task Finished")
             }
+            
+            
+            //Asynchronous logic (eg: n/w calls) with callback {
+            //     if self.cancelled {
+            //        state = .Finished
+            //     }
+            //     else {
+            //         Perform any final operations on data from server
+            //         state = Finished
+            //     }
+            // }
         }
     }
 }

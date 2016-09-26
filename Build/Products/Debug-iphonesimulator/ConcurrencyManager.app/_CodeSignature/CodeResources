@@ -110,6 +110,10 @@
 		<data>
 		4L4H6szHKYBC5kxyYkVDcXbztjY=
 		</data>
+		<key>Operation Process.png</key>
+		<data>
+		kBLtBoknUJyXaS5D0z1SUfnRy64=
+		</data>
 		<key>PkgInfo</key>
 		<data>
 		n57qDP4tZfLD1rCS43W0B4LQjzE=
@@ -329,6 +333,17 @@
 			<key>hash2</key>
 			<data>
 			9rxMSh0y8qunN8xOthMGYtr1OIyPjNzdjuvr8g4hlV4=
+			</data>
+		</dict>
+		<key>Operation Process.png</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			kBLtBoknUJyXaS5D0z1SUfnRy64=
+			</data>
+			<key>hash2</key>
+			<data>
+			mLGcMhvHDPafnYhvqd02CSLfI4cI90qIX/UZj9Pr9as=
 			</data>
 		</dict>
 		<key>libswiftRemoteMirror.dylib</key>
