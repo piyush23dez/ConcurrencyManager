@@ -52,7 +52,7 @@ class SwiftOperation: ConcurrentOperation {
             //     }
             //     else {
             //         Perform any final operations on data from server
-            //         state = Finished
+            //         state = .Finished
             //     }
             // }
         }
