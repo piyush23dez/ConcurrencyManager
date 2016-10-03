@@ -65,14 +65,23 @@ class ViewController: UIViewController {
         
         //Perform server operations on background thread
         concurrentQueue.async {
-            for image in imageURLs {
-                let image = Downloader.downloadImgageWithURL(url: image)
-                print(image)
-            }
+           let image1 = Downloader.downloadImgageWithURL(url: imageUrls[0])
             
             //Perform UI updates on main thread
             DispatchQueue.main.async {
                 //Update UI
+                self.imageView.image = image1
+            }
+        }
+        
+        //Perform server operations on background thread
+        concurrentQueue.async {
+           let image2 = Downloader.downloadImgageWithURL(url: imageUrls[1])
+            
+            //Perform UI updates on main thread
+            DispatchQueue.main.async {
+                //Update UI
+                self.imageView.image = image2
             }
         }
     }
@@ -81,20 +90,29 @@ class ViewController: UIViewController {
     func getImagesUsingOperationQueue() {
     
         let operationQueue = OperationQueue()
+                 
+        //Perform server operations on background thread
+        operationQueue.addOperation {
+            let image1 = Downloader.downloadImgageWithURL(url: imageUrls[0])
+           
+            //Perform UI updates on main thread
+            OperationQueue.main.addOperation {
+              //Update UI
+             self.imageView.image = image1
+           }
+         }
         
-        for image in imageURLs {
-            
-            //Perform server operations on background thread
-            operationQueue.addOperation {
-                let image = Downloader.downloadImgageWithURL(url: image)
-                print(image)
-                
-                //Perform UI updates on main thread
-                OperationQueue.main.addOperation {
-                    //Update UI
-                }
-            }
-        }
+        //Perform server operations on background thread
+        operationQueue.addOperation {
+            let image2 = Downloader.downloadImgageWithURL(url: imageUrls[1])
+           
+            //Perform UI updates on main thread
+            OperationQueue.main.addOperation {
+              //Update UI
+               self.imageView.image = image2
+           }
+         }        
+       }
     }
     
     //BlockOperation for downloading images with dependancy
