@@ -12,7 +12,7 @@ class ConcurrentOperation: Operation {
     
     // MARK: - Types
     
-    //Step 1: define oepration states
+    //Step 1: define oppration states
     
     enum State {
         case isReady, isExecuting, isFinished
@@ -25,9 +25,9 @@ class ConcurrentOperation: Operation {
             }
         }
     }    
-    
-    //MARK: Properties
-    
+        
+    //Step 2: setup state observers
+
     var state: State = .isReady {
         
         willSet {
@@ -41,7 +41,7 @@ class ConcurrentOperation: Operation {
     }
     
     
-    //MARK: Override Operation States
+    //Step 3: override state properties
     
     override var isReady: Bool {
         return super.isReady && state == .isReady
