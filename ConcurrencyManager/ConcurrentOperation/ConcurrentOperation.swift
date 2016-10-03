@@ -12,34 +12,31 @@ class ConcurrentOperation: Operation {
     
     // MARK: - Types
     
+    //Step 1: define oepration states
+    
     enum State {
-        
         case isReady, isExecuting, isFinished
         
-        func keyPath() -> String {
-            
+        var keyPath: String {
             switch self {
-            case .isReady:
-                return "isReady"
-            case .isExecuting:
-                return "isExecuting"
-            case .isFinished:
-                return "isFinished"
+                case .isReady: return "isReady"
+                case .isExecuting: return "isExecuting"
+                case .isFinished: return "isFinished"
             }
         }
-    }
+    }    
     
     //MARK: Properties
     
     var state: State = .isReady {
         
         willSet {
-            willChangeValue(forKey: newValue.keyPath()) //new value
-            willChangeValue(forKey: state.keyPath())    //current value
+            willChangeValue(forKey: newValue.keyPath) //new value
+            willChangeValue(forKey: state.keyPath)    //current value
         }
         didSet {
-            didChangeValue(forKey: oldValue.keyPath()) //old value
-            didChangeValue(forKey: state.keyPath())    //current value
+            didChangeValue(forKey: oldValue.keyPath) //old value
+            didChangeValue(forKey: state.keyPath)    //current value
         }
     }
     
