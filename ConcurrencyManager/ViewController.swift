@@ -26,21 +26,22 @@ class Downloader {
 }
 
 class ViewController: UIViewController {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let time = self.getTimeIntervalFor(method: longRunningTaskUsingDispatchGroup)
-        print("time taken for running method: \(time)")
+      let time = self.getTimeIntervalFor(method: performCustomOperation)
+      print("time taken for running method: \(time)")
     }
     
     @IBAction func buttonTouched(_ sender: AnyObject) {
     }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
     func downloadImages() {
         
         let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
@@ -68,7 +69,7 @@ class ViewController: UIViewController {
         //Perform server operations on background thread
         concurrentQueue.async {
             //let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
-            
+    
             //Perform UI updates on main thread
             DispatchQueue.main.async {
                 //Update UI
@@ -79,11 +80,12 @@ class ViewController: UIViewController {
         //Perform server operations on background thread
         concurrentQueue.async {
             //let image2 = Downloader.downloadImgageWithURL(url: imageURLs[1])
-            
+
             //Perform UI updates on main thread
             DispatchQueue.main.async {
                 //Update UI
                 //self.imageView.image = image2
+
             }
         }
     }
@@ -114,6 +116,7 @@ class ViewController: UIViewController {
                 //self.imageView.image = image2
             }
         }
+        
     }
     
     //BlockOperation for downloading images with dependancy
