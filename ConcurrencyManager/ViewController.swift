@@ -90,7 +90,7 @@ class ViewController: UIViewController {
         }
     }
     
-    //OperationQueue for downloading images
+    //OperationQueue for downloading images - order of execution decided by system
     func getImagesUsingOperationQueue() {
         
         let operationQueue = OperationQueue()
@@ -121,7 +121,7 @@ class ViewController: UIViewController {
         
     }
     
-    //BlockOperation for downloading images with dependancy
+    //BlockOperation for downloading images with dependancy - order of execution based on dependency
     func getImagesUsingBlockOperation() {
         let queue = OperationQueue()
         var operations = [Operation]()
@@ -154,7 +154,7 @@ class ViewController: UIViewController {
         queue.addOperations(operations, waitUntilFinished: true)
     }
     
-    //BlockOperations with priority
+    //BlockOperations with priority- order of execution decided by priority
     func performOperationsWithPriorities() {
         let queue = OperationQueue()
         
@@ -176,7 +176,7 @@ class ViewController: UIViewController {
         queue.addOperations([operation1, operation2], waitUntilFinished: true)
     }
     
-    //Custom Operation Class - operation finihshed in sequence
+    //Custom Operation Class - order of execution is in sequnce
     func performCustomOperation() {
         let queue = OperationQueue()
         
