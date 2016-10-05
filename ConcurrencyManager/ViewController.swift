@@ -216,8 +216,7 @@ class ViewController: UIViewController {
         }
     }
     
-    
-    
+        
     func createDispatchGroup() {
         let queue = DispatchQueue.global(qos: .background)
         let group = DispatchGroup()
@@ -226,7 +225,7 @@ class ViewController: UIViewController {
         group.enter()
         queue.async {
             print("Task 1 started")
-            self.delay(seconds: 30, closure: {
+            self.delay(seconds: 10, closure: {
                 print("Task 1 finished")
                 group.leave()
             })
