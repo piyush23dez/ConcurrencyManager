@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-      let time = self.getTimeIntervalFor(method: performCustomOperation)
+      let time = self.getTimeIntervalFor(method: performOperationsWithPriorities)
       print("time taken for running method: \(time)")
     }
     
@@ -103,6 +103,7 @@ class ViewController: UIViewController {
             OperationQueue.main.addOperation {
                 //Update UI
                 //self.imageView.image = image1
+                print("Operation 1 finihsed")
             }
         }
         
@@ -114,6 +115,7 @@ class ViewController: UIViewController {
             OperationQueue.main.addOperation {
                 //Update UI
                 //self.imageView.image = image2
+                print("Operation 2 finihsed")
             }
         }
         
@@ -160,11 +162,11 @@ class ViewController: UIViewController {
         let operation2 = BlockOperation {}
         
         operation1.completionBlock = {
-            print("Operation1 completed")
+            print("Operation1 finished")
         }
         
         operation2.completionBlock = {
-            print("Operation2 completed")
+            print("Operation2 finished")
         }
         
         operation1.queuePriority = .low
@@ -174,7 +176,7 @@ class ViewController: UIViewController {
         queue.addOperations([operation1, operation2], waitUntilFinished: true)
     }
     
-    //Custom Operation Class
+    //Custom Operation Class - operation finihshed in sequence
     func performCustomOperation() {
         let queue = OperationQueue()
         

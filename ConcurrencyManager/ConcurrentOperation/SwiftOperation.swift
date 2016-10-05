@@ -29,7 +29,7 @@ class SwiftOperation: ConcurrentOperation {
         else {
             state = .isExecuting
             
-            //Simulate operation
+            //Simulate long running operation
             for index in 1...5 {
                 print("Printing index: \(index)")
                 sleep(1)
