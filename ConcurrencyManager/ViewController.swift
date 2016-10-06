@@ -307,12 +307,19 @@ class ViewController: UIViewController {
                 
             })
         }
-        
         perform(#selector(ViewController.handleAsyncResult), with: nil, afterDelay: 4)
     }
     
     func handleAsyncResult() {
      print(person.name,person.age)
+    }
+   
+    private var value: Int = 0
+    func incrementSafe() {
+        let queue = DispatchQueue(label: "com.apple.serial")
+        queue.sync {
+            value += 1
+        }
     }
 
     
