@@ -322,6 +322,16 @@ class ViewController: UIViewController {
         }
     }
 
+    func deadlock() {
+     let queue = DispatchQueue(label: "com.apple.queue")
+      //On Serial Dispatch Queue, we have to wait in order to execute Task 2 on the thread that is executing Task 1 right now.
+        queue.async {
+         //Task1
+         queue.sync {
+             //Task2
+         }
+       }
+    }
     
     //Returns time interval for operation
     func getTimeIntervalFor(method performBlock: (() -> Void)) -> TimeInterval {
