@@ -269,6 +269,53 @@ class ViewController: UIViewController {
         }
     }
     
+     class Person {
+        var name: String
+        var age: Int
+        
+        init(name: String, age: Int) {
+            self.name = name
+            self.age = age
+        }
+        
+        func update(name: String, age: Int) {
+            self.name = name
+            self.age = age
+        }
+    }
+    
+    var person = Person (name: "Leo", age: 22)
+
+    func threadSafeMultiThreading() {
+        let locker  = NSRecursiveLock()
+        let queue1 = DispatchQueue(label: "Serial1")
+        let queue2 = DispatchQueue(label: "Serial2")
+        
+        queue1.async {
+            self.delay(seconds: 1, closure: {
+                locker.lock()
+                self.person.update(name: "Jack", age: 20)
+                locker.unlock()
+            })
+        }
+        
+        queue2.async {
+            self.delay(seconds: 1, closure: {
+                locker.lock()
+                self.person.update(name: "Lucy", age: 25)
+                locker.unlock()
+                
+            })
+        }
+        
+        perform(#selector(ViewController.handleAsyncResult), with: nil, afterDelay: 4)
+    }
+    
+    func handleAsyncResult() {
+     print(person.name,person.age)
+    }
+
+    
     //Returns time interval for operation
     func getTimeIntervalFor(method performBlock: (() -> Void)) -> TimeInterval {
         let start = Date()
