@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-      let time = self.getTimeIntervalFor(method: performOperationsWithPriorities)
+      let time = self.getTimeIntervalFor(method: getImagesUsingBlockOperation)
       print("time taken for running method: \(time)")
     }
     
@@ -97,52 +97,82 @@ class ViewController: UIViewController {
         
         //Perform server operations on background thread
         operationQueue.addOperation {
-            //let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
+            let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
             
             //Perform UI updates on main thread
             OperationQueue.main.addOperation {
                 //Update UI
-                //self.imageView.image = image1
+                print(image1)
                 print("Operation 1 finihsed")
             }
         }
         
         //Perform server operations on background thread
         operationQueue.addOperation {
-            //let image2 = Downloader.downloadImgageWithURL(url: imageURLs[1])
-            
-            //Perform UI updates on main thread
-            OperationQueue.main.addOperation {
-                //Update UI
-                //self.imageView.image = image2
-                print("Operation 2 finihsed")
-            }
-        }
-        
-    }
-    
-    //BlockOperation for downloading images with dependancy - order of execution based on dependency
-    func getImagesUsingBlockOperation() {
-        let queue = OperationQueue()
-        var operations = [Operation]()
-        
-        let operation1 = BlockOperation {
-            //let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
-            
-            OperationQueue.main.addOperation {
-                //Update UI
-                print("Operation1 completed")
-            }
-        }
-        
-        let operation2 = BlockOperation {
-            let image2 = Downloader.downloadImgageWithURL(url: imageURLs[1])
+            let image2 = Downloader.downloadImgageWithURL(url: imageURLs[0])
             
             //Perform UI updates on main thread
             OperationQueue.main.addOperation {
                 //Update UI
                 print(image2)
-                print("Operation2 completed")
+                print("Operation 2 finihsed")
+            }
+        }
+    }
+    
+    //BlockOperations for downloading images - order of execution decided by system
+    func getImagesUsingBlockOperation() {
+        let queue = OperationQueue()
+        
+        let blockOperation1 = BlockOperation {
+            let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
+            
+            OperationQueue.main.addOperation {
+                //update ui
+                print(image1)
+                print("Block Operation1 completed")
+            }
+        }
+        
+        let blockOperation2 = BlockOperation {
+            let image2 = Downloader.downloadImgageWithURL(url: imageURLs[0])
+            
+            //perform ui updates on main thread
+            OperationQueue.main.addOperation {
+                //update ui
+                print(image2)
+                print("Block Operation2 completed")
+            }
+        }
+        
+        //order of execution decided by system
+        queue.addOperation(blockOperation1)
+        queue.addOperation(blockOperation2)
+    }
+
+    //BlockOperations for downloading images with dependancy - order of execution based on dependency
+    func getImagesUsingBlockOperationDependency() {
+        let queue = OperationQueue()
+        var operations = [Operation]()
+        
+        let operation1 = BlockOperation {
+            let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
+            
+            OperationQueue.main.addOperation {
+                //update ui
+                print(image1)
+                print("Block Operation1 completed")
+            }
+        }
+        
+        let operation2 = BlockOperation {
+            let image2 = Downloader.downloadImgageWithURL(url: imageURLs[0])
+            
+            //Perform UI updates on main thread
+            OperationQueue.main.addOperation {
+                //update ui
+                print(image2)
+                print("Block Operation2 completed")
             }
         }
         
@@ -153,6 +183,37 @@ class ViewController: UIViewController {
         operations.append(operation2)
         queue.addOperations(operations, waitUntilFinished: true)
     }
+    
+    //BlockOperations for downloading images with maxConcurrentOperationCount - order of execution is decided by sequence of addding operations in queue & maxConcurrentOperationCount property
+    func getImagesUsingBlockOperationMaxCount() {
+        let queue = OperationQueue()
+        
+        let blockOperation1 = BlockOperation {
+            let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
+            
+            OperationQueue.main.addOperation {
+                //update ui
+                print(image1)
+                print("Block Operation1 completed")
+            }
+        }
+        
+        let blockOperation2 = BlockOperation {
+            let image2 = Downloader.downloadImgageWithURL(url: imageURLs[0])
+            
+            //perform ui updates on main thread
+            OperationQueue.main.addOperation {
+                //update ui
+                print(image2)
+                print("Block Operation2 completed")
+            }
+        }
+        
+        queue.maxConcurrentOperationCount = 1
+        queue.addOperation(blockOperation2)// will be executed first
+        queue.addOperation(blockOperation1)// will be executed after
+    }
+
     
     //BlockOperations with priority- order of execution decided by priority
     func performOperationsWithPriorities() {
@@ -176,7 +237,7 @@ class ViewController: UIViewController {
         queue.addOperations([operation1, operation2], waitUntilFinished: true)
     }
     
-    //Custom Operation Class - order of execution is in sequnce
+    //Custom Operation - order of execution is decided by system if simply adding operations in queue without(dependency, maxConcurrentOperatinCount or priorities)
     func performCustomOperation() {
         let queue = OperationQueue()
         
@@ -190,7 +251,6 @@ class ViewController: UIViewController {
             print("Custom operation 2 is completed")
         }
         
-        queue.maxConcurrentOperationCount = 1
         queue.addOperation(customOperation1)
         queue.addOperation(customOperation2)
     }
@@ -251,13 +311,13 @@ class ViewController: UIViewController {
             group.leave()
         }
         
-        // synchronize on task scheduling completion by waiting on the group to block the current thread.
+        //synchronize on task scheduling completion by waiting on the group to block the current thread.
         group.notify(qos: .background, queue: .main) {
             // This closure will be executed when all tasks are complete
             print("All tasks completed")
         }
         
-        // synchronize on task completion by waiting on the group to block the current thread.
+        //synchronize on task completion by waiting on the group to block the current thread.
         //print("block while waiting on task completion")
         //let _ = group.wait()
         print("continue")
@@ -269,7 +329,22 @@ class ViewController: UIViewController {
         }
     }
     
-   
+    
+    //Returns time interval for operation
+    func getTimeIntervalFor(method performBlock: (() -> Void)) -> TimeInterval {
+        let start = Date()
+        performBlock()
+        let end = Date()
+        
+        let timeInterval = end.timeIntervalSince(start)
+        return timeInterval
+    }
+    
+    
+
+    
+   //MARK: Thread safe examples
+    
     class Foo {
        var value: Int = 0
        func doIt() {
@@ -285,11 +360,11 @@ class ViewController: UIViewController {
         let queue = DispatchQueue.global(qos: .default)
         let locker = NSLock()
     
-        for index in 0..<4 {
+        for _ in 0..<4 {
           queue.async {
-            //locker.lock()
+            locker.lock()
             foo.doIt()
-            //locker.unlock()
+            locker.unlock()
            }
         }   
     }
@@ -314,27 +389,17 @@ class ViewController: UIViewController {
     }
     
     //Thread Safe property   
-    private let value: Int
+    private var someValue: Int = 0
     private let serialQueue: DispatchQueue = DispatchQueue(label: "com.queue.serial")
 
     var state: Int {
      get {
-       return serialQueue.sync { value }
+       return serialQueue.sync { someValue }
      }
 
      set (newValue) {
-       serialQueue.sync { value = newValue }
+       serialQueue.sync { someValue = newValue }
      }
    }
-    
-    //Returns time interval for operation
-    func getTimeIntervalFor(method performBlock: (() -> Void)) -> TimeInterval {
-        let start = Date()
-        performBlock()
-        let end = Date()
-        
-        let timeInterval = end.timeIntervalSince(start)
-        return timeInterval
-    }
 }
 
