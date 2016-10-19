@@ -313,6 +313,20 @@ class ViewController: UIViewController {
        }
     }
     
+    //Thread Safe property   
+    private let value: Int
+    private let serialQueue: DispatchQueue = DispatchQueue(label: "com.queue.serial")
+
+    var state: Int {
+     get {
+       return serialQueue.sync { value }
+     }
+
+     set (newValue) {
+       serialQueue.sync { value = newValue }
+     }
+   }
+    
     //Returns time interval for operation
     func getTimeIntervalFor(method performBlock: (() -> Void)) -> TimeInterval {
         let start = Date()
