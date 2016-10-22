@@ -266,9 +266,11 @@ class ViewController: UIViewController {
             
             queue.async(group: group, execute: {
                 print("Appending item... \(index)")
-                DispatchQueue.main.async {
-                    finalArray.append(index)
-                }
+                
+                objc_sync_enter(finalArray)
+                finalArray.append(index)
+                objc_sync_exit(finalArray)
+                
                 group.leave()
             })
         }
