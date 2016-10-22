@@ -326,6 +326,27 @@ class ViewController: UIViewController {
         print("continue")
     }
     
+    func performOperationWithSemaphore() {
+        let semaphore = DispatchSemaphore(value: 1)
+        let waitTime = DispatchTime.now() + DispatchTimeInterval.seconds(1)
+        let queue = DispatchQueue.global(qos: .background)
+        
+        queue.async {
+            let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
+            print(image1)
+            
+            //end access to resource
+            semaphore.signal()
+        }
+        
+        if case .timedOut = semaphore.wait(timeout: waitTime) {
+            print("OMG! Someone was holding on that semaphore!")
+        }
+        else {
+            print("success")
+        }
+    }
+    
     func delay(seconds delay: Double, closure: @escaping () -> ()) {
         DispatchQueue.global(qos: .utility).asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.seconds(Int(delay))) {
             closure()
