@@ -327,6 +327,8 @@ class ViewController: UIViewController {
     }
     
     func performOperationWithSemaphore() {
+        
+        // creating the semaphore with a resource count of 1
         let semaphore = DispatchSemaphore(value: 1)
         let waitTime = DispatchTime.now() + DispatchTimeInterval.seconds(1)
         let queue = DispatchQueue.global(qos: .background)
@@ -339,6 +341,7 @@ class ViewController: UIViewController {
             semaphore.signal()
         }
         
+        // synchronize access to a shared resource using the semaphore
         if case .timedOut = semaphore.wait(timeout: waitTime) {
             print("OMG! Someone was holding on that semaphore!")
         }
