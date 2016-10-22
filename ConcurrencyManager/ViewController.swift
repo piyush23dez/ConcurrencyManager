@@ -258,7 +258,7 @@ class ViewController: UIViewController {
     func longRunningTaskUsingDispatchGroup() {
         let queue = DispatchQueue.global(qos: .background)
         let group = DispatchGroup()
-        
+        let locker = NSLock()
         var finalArray = [Int]()
         
         for index in 1...10 {
@@ -267,9 +267,10 @@ class ViewController: UIViewController {
             queue.async(group: group, execute: {
                 print("Appending item... \(index)")
                 
-                objc_sync_enter(finalArray)
+                //thread safe access to array
+                locker.lock()
                 finalArray.append(index)
-                objc_sync_exit(finalArray)
+                locker.unlock()
                 
                 group.leave()
             })
