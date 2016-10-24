@@ -215,7 +215,7 @@ class ViewController: UIViewController {
     }
 
     
-    //BlockOperations with priority- order of execution decided by priority
+    //BlockOperations with priority- order of execution decided by priority & maxConcurrentOperationCount property
     func performOperationsWithPriorities() {
         let queue = OperationQueue()
         
