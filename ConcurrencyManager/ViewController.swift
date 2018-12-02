@@ -243,11 +243,17 @@ class ViewController: UIViewController {
         
         let customOperation1 = SwiftOperation()
         customOperation1.completionBlock = {
+            if customOperation1.isCancelled {
+                 return
+            }
             print("Custom operation 1 is completed")
         }
         
         let customOperation2 = SwiftOperation()
         customOperation2.completionBlock = {
+            if customOperation2.isCancelled {
+                 return
+            }
             print("Custom operation 2 is completed")
         }
         
