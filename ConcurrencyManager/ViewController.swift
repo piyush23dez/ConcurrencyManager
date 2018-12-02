@@ -340,8 +340,12 @@ class ViewController: UIViewController {
         let queue = DispatchQueue.global(qos: .background)
         
         queue.async {
-            let image1 = Downloader.downloadImgageWithURL(url: imageURLs[0])
-            print(image1)
+            
+            semaphore.wait()  // requesting the resource
+           
+            for i in 0...10 {
+                print(symbol, i)
+             }
             
             //end access to resource
             semaphore.signal()
