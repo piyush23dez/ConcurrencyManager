@@ -9,8 +9,26 @@
 import Foundation
 
 
+// This enum contains all the possible states a photo record can be in
+enum RestaurantInventoryState {
+  case unknown, downloaded, failed
+}
+
+struct RestaurantModel {
+  var state = RestaurantInventoryState.unknown
+  var data = [String : Any]()
+}
+
 class SwiftOperation: ConcurrentOperation {
+    var restaurantModel: RestaurantModel
+    var networkProvider: NetworkProvider
     
+    init(restaurantModel: RestaurantModel, networkProvider: NetworkProvider) {
+        self.restaurantModel = restaurantModel
+        self.networkProvider = networkProvider
+    }
+    
+    // step1    
     override func start() {
         if self.isCancelled {
             state = .isFinished
@@ -21,22 +39,27 @@ class SwiftOperation: ConcurrentOperation {
         }
     }
     
+    // step2
     override func main() {
         
         if self.isCancelled {
             state = .isFinished
+            return
         }
-        else {
-            state = .isExecuting
-            
-            //Simulate long running operation
-            for index in 1...5 {
-                print("Printing index: \(index)")
-                sleep(1)
+        
+        state = .isExecuting
+        
+        networkProvider.fetchInventory() { jsonData in
+            if let json = jsonData, !json.isEmpty {
+                guard let serializedDictionary = try? JSONSerialization.jsonObject(with: json, options: []) as? [String: Any] else { return }
+                restaurantModel.state = .downloaded
+                restaurantModel.data = serializedDictionary
+            } else {
+                restaurantModel.state = .failed
             }
-            
+                                               
             //After network operation or completion of long running task update state
-            if self.isCancelled {
+            if isCancelled {
                 state = .isFinished
                 print("Task Cancelled")
             }
@@ -44,17 +67,6 @@ class SwiftOperation: ConcurrentOperation {
                 state = .isFinished
                 print("Task Finished")
             }
-            
-            
-            //Asynchronous logic (eg: n/w calls) with callback {
-            //     if self.cancelled {
-            //        state = .Finished
-            //     }
-            //     else {
-            //         Perform any final operations on data from server
-            //         state = .Finished
-            //     }
-            // }
         }
-    }
+    }   
 }
