@@ -364,17 +364,16 @@ class ViewController: UIViewController {
     
     
     //Returns time interval for operation
-    func getTimeIntervalFor(method performBlock: (() -> Void)) -> TimeInterval {
-        let start = Date()
-        performBlock()
-        let end = Date()
+    func getTimeIntervalFor(method performBlock: (() -> Void)) -> CFTimeInterval {
         
-        let timeInterval = end.timeIntervalSince(start)
-        return timeInterval
+        let start = CACurrentMediaTime()
+        performBlock()
+        let end = CACurrentMediaTime()
+        
+        return end - start
     }
     
     
-
     
    //MARK: Thread safe examples
     
