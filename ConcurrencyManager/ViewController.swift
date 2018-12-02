@@ -339,10 +339,7 @@ class ViewController: UIViewController {
         let waitTime = DispatchTime.now() + DispatchTimeInterval.seconds(1)
         let queue = DispatchQueue.global(qos: .background)
         
-        queue.async {
-            
-            semaphore.wait()  // requesting the resource
-           
+        queue.async {           
             for i in 0...10 {
                 print(symbol, i)
              }
