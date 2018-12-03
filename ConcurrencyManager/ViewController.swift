@@ -332,6 +332,16 @@ class ViewController: UIViewController {
         print("continue")
     }
     
+    /*
+        While DispatchGroup provides a nice and easy way to synchronize a group of asynchronous operations 
+        while still remaining asynchronous, DispatchSemaphore provides a way to synchronously wait for a group of 
+        asynchronous tasks.This is very useful in command line tools or scripts, where we don’t have an application run loop, 
+        and instead just execute synchronously in a global context until done.
+        Like DispatchGroup, the semaphore API is very simple in that we only increment or decrement an internal counter,
+        by either calling wait() or signal(). Calling wait() before a signal() will block the current queue until a signal
+        is received.
+    */
+    
     func performOperationWithSemaphore() {
         
         // creating the semaphore with a resource count of 1
