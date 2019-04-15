@@ -351,7 +351,7 @@ class ViewController: UIViewController {
         
         queue.async {           
             for i in 0...10 {
-                print(symbol, i)
+                print(i)
              }
             
             //end access to resource
