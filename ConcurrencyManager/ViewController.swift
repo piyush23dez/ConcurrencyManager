@@ -444,5 +444,32 @@ class ViewController: UIViewController {
        serialQueue.sync { someValue = newValue }
      }
    }
+    
+    
+class SafeArray<T> {
+    var array = [T]()
+    let queue = DispatchQueue(label: "com.concurrent.queue", attributes: .concurrent)
+    
+    func append(_ item: T) {
+        queue.async(flags: .barrier) {
+            self.array.append(item)
+        }
+    }
+    
+    func values() -> [T] {
+        var result = [T]()
+        queue.sync {
+            result = array
+        }
+        return result
+    }
+}
+
+let safeArray = SafeArray<Int>()
+var array = [Int]()
+
+DispatchQueue.concurrentPerform(iterations: 10) {  index in
+    safeArray.append(index)
+}
 }
 
