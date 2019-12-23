@@ -580,6 +580,26 @@ do {
     print(error.localizedDescription)
 }
 
+class Employee {
+    let serialQueue = DispatchQueue(label: "name.lock.queue")
+    lazy var name: String = "i am lazy property"
+    
+    func updateName() {
+        self.serialQueue.async {
+            print(self.name)
+        }
+        
+        serialQueue.async {
+            print(self.name)
+        }
+    }
+    
+    func printName() {
+        DispatchQueue.global().async {
+            self.updateName()
+        }
+    }
 }
+
 }
 
