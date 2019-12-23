@@ -446,8 +446,10 @@ class ViewController: UIViewController {
 //Shared Resource Access using Asynchronous Queue And Semaphores
 var sharedResource = [Int]()
 let queue = DispatchQueue.global(qos: .background)
+
 let semaphore = DispatchSemaphore(value: 0)
-func fetchImage(completion: () -> ()) {
+
+ func fetchImage(completion: () -> ()) {
     sleep(2)
     completion()
 }
@@ -458,7 +460,8 @@ queue.async {
         sharedResource.append(1)
         semaphore.signal()
     }
-    semaphore.wait()
+    semaphore.wait()// putting semaphore after api call helps async operations to be thread safe and in sync
+
 
     fetchImage {
         print("fetchImage 2")
@@ -513,14 +516,15 @@ DispatchQueue.concurrentPerform(iterations: 10) {  index in
 //example if you want to download lots of images from a server you can run a batch of x every time.
 
 print("start")
-let sem = DispatchSemaphore(value: 2)
+let semaphore = DispatchSemaphore(value: 2) //semaphore resource count > 0
 for i in 0..<10 {
     DispatchQueue.global().async {
-        sem.wait()
-        sleep(3)
-        print("batch")
-        print(i)
-        sem.signal()
+        semaphore.wait()// putting semaphore before api call helps creating batch operations
+        fetchImage {
+            print("batch")
+            print(i)
+            semaphore1.signal()
+        }
     }
 }
 print("end")
