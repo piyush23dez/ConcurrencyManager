@@ -531,7 +531,7 @@ print("end")
     
 class LightSafeArray<T> {
     var array = [T]()
-    let queue = DispatchSemaphore(value: 1)
+    let semaphore = DispatchSemaphore(value: 1)
     
     func append(_ item: T) {
         semaphore.wait(timeout: .distantFuture)
@@ -553,7 +553,7 @@ class LightSafeArray<T> {
     
 func fetchSomethingAsyncAwait() throws -> Data? {
     guard let url = URL(string: "https://www.google.com") else {
-        fatalError("Invlaid url")
+        fatalError("Invalid url")
     }
     var data: Data?
     var response: URLResponse?
@@ -593,18 +593,18 @@ class Employee {
     lazy var name: String = "i am lazy property"
     
     func updateName() {
-        self.serialQueue.async {
-            print(self.name)
-        }
-        
-        serialQueue.async {
-            print(self.name)
-        }
+        //accesing name property on background queue or it could be any serial queue
+       DispatchQueue.global().async {
+          printName()
+       }
+        //accesing name property on current thread
+        printName()
     }
     
-    func printName() {
-        DispatchQueue.global().async {
-            self.updateName()
+    func printName(_ name: String) {
+        //make thread safe name property
+        serialQueue.async {
+            print(self.name)
         }
     }
 }
