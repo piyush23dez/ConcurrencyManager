@@ -445,6 +445,38 @@ class ViewController: UIViewController {
      }
    }
     
+
+//Shared Resource Access usunf Async And Semaphores
+var sharedResource = [Int]()
+let queue = DispatchQueue.global(qos: .background)
+let semaphore = DispatchSemaphore(value: 0)
+func fetchImage(completion: () -> ()) {
+    sleep(2)
+    completion()
+}
+
+queue.async {
+    fetchImage {
+        print("fetchImage 1")
+        sharedResource.append(1)
+        semaphore.signal()
+    }
+    semaphore.wait()
+
+    fetchImage {
+        print("fetchImage 2")
+        sharedResource.append(2)
+        semaphore.signal()
+    }
+    semaphore.wait()
+
+    fetchImage {
+        print("fetchImage 3")
+        sharedResource.append(3)
+        semaphore.signal()
+    }
+    semaphore.wait
+}    
     
 class SafeArray<T> {
     var array = [T]()
@@ -470,6 +502,45 @@ var array = [Int]()
 
 DispatchQueue.concurrentPerform(iterations: 10) {  index in
     safeArray.append(index)
+}
+    
+//You can create a thread pool like behavior to simulate limited resources using a dispatch semaphore. So for
+//example if you want to download lots of images from a server you can run a batch of x every time.
+
+print("start")
+let sem = DispatchSemaphore(value: 2)
+for i in 0..<10 {
+    DispatchQueue.global().async {
+        sem.wait()
+        sleep(3)
+        print("batch")
+        print(i)
+        sem.signal()
+    }
+}
+print("end")
+  
+    
+class LightSafeArray<T> {
+    var array = [T]()
+    let queue = DispatchSemaphore(value: 1)
+    
+    func append(_ item: T) {
+        semaphore.wait(timeout: .distantFuture)
+        self.array.append(item)
+        semaphore.signal()
+    }
+    
+    func removeLast() {
+        defer {
+            semaphore.signal()
+        }
+        semaphore.wait(timeout: .distantFuture)
+        guard !array.isEmpty else {
+            return
+        }
+        array.removeLast()
+    }
 }
 }
 
