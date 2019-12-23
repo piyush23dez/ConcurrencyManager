@@ -541,6 +541,45 @@ class LightSafeArray<T> {
         }
         array.removeLast()
     }
+    
+    
+func fetchSomethingAsyncAwait() throws -> Data? {
+    guard let url = URL(string: "https://www.google.com") else {
+        fatalError("Invlaid url")
+    }
+    var data: Data?
+    var response: URLResponse?
+    var error: Error?
+    
+    let semophore = DispatchSemaphore(value: 0)
+    
+    URLSession.shared.dataTask(with: url) { (d, r, e) in
+        data = d
+        response = r
+        error = e
+        semophore.signal()
+    }.resume()
+    
+    semaphore.wait(timeout: .distantFuture)
+    
+    if let response = response as? HTTPURLResponse {
+        print(response.statusCode)
+    }
+    
+    if let error = error {
+        print(error.localizedDescription)
+    }
+    
+    return data
+}
+
+do {
+    let data  = try fetchSomethingAsyncAwait()
+    print(data)
+} catch {
+    print(error.localizedDescription)
+}
+
 }
 }
 
